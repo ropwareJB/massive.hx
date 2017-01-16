@@ -1,0 +1,32 @@
+{
+  "_path": "massive",
+  "_filename": ".hxproj",
+  "common": {
+    "name": "massive",
+    "sources": [
+      "src"
+    ],
+    "flags": [],
+    "prepend": null,
+    "prependFile": null,
+    "resources": {},
+    "libraries_haxe": {},
+    "libraries_reg": {}
+  },
+  "solutions": {
+    "massive": {
+      "target": "java",
+      "out_dir": "bin",
+      "out_bin": "massive",
+      "main": "Main",
+      "name": null,
+      "sources": [],
+      "flags": [],
+      "prepend": null,
+      "prependFile": null,
+      "resources": {},
+      "libraries_haxe": {},
+      "libraries_reg": {}
+    }
+  }
+}
