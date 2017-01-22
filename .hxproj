@@ -10,7 +10,12 @@
     "prepend": null,
     "prependFile": null,
     "resources": {},
-    "libraries_haxe": {},
+    "libraries_haxe": {
+      "tink_await":"*",
+      "tink_macro":"*",
+      "tink_core":"*",
+      "tink_syntaxhub":"*"
+    },
     "libraries_reg": {}
   },
   "solutions": {

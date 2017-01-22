@@ -11,3 +11,10 @@ Describe the solution here.
 ```
 
 ```
+
+#### TODO
+- Check at compiletime if object B has all props from object A.
+- Allow assignment to anonymous structures
+- Allow assignment from anonymous structures
+- Scenarios?
+- transformation of @massive metadata
