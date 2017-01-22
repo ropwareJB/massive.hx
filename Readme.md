@@ -36,29 +36,39 @@ var oldModel = new ExampleModel(1, 2, 3);
 var newModel = new ExampleModel(3, 4, 10);
 ```
 
+...and an `@:mass` annotated function `example`...
+
 ##### Selective Assignment
 We can selectively copy attributes from `newModel` to `oldModel`;
 ```
-@:mass(propertyA, propertyB) oldModel = newModel;
+@:mass function example(){
+  @:mass(propertyA, propertyB) oldModel = newModel;
+}
 ```
 
 Which will map out to the following at compile time;
 ```
-oldModel.propertyA = newModel.propertyA;
-oldModel.propertyB = newModel.propertyB;
+function example(){
+  oldModel.propertyA = newModel.propertyA;
+  oldModel.propertyB = newModel.propertyB;
+}
 ```
 
 ##### Absolute Assignment
 We can also copy **all** attributes from `newModel` to `oldModel` that oldModel can hold;
 ```
-@:mass oldModel = newModel;
+@:mass function example(){
+  @:mass oldModel = newModel;
+}
 ```
 
 Which will map out to the following at compile time;
 ```
-oldModel.propertyA = newModel.propertyA;
-oldModel.propertyB = newModel.propertyB;
-oldModel.propertyC = newModel.propertyC;
+function example(){
+  oldModel.propertyA = newModel.propertyA;
+  oldModel.propertyB = newModel.propertyB;
+  oldModel.propertyC = newModel.propertyC;
+}
 ```
 
 #### Credits

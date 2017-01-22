@@ -1,0 +1,17 @@
+{
+  "name": "massive",
+  "license": "MIT",
+  "classPath": "src",
+  "tags": ["massive","web","assignment"],
+  "description": "Massive assignment for haxe.",
+  "contributors": ["epidevJosh"],
+  "releasenote": "Initial version",
+  "version": "1.0.0",
+  "url": "https://github.com/Montycarlo/massive.hx",
+  "dependencies": {
+    "tink_await": "",
+    "tink_macro": "",
+    "tink_core": "",
+    "tink_syntaxhub": ""
+  }
+}
