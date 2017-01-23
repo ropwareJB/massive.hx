@@ -18,13 +18,13 @@ class MassiveMacro{
 
     function appliesTo(m:MetaAccess) return m.has('mass') || m.has(':mass');
 		
-		SyntaxHub.classLevel.after(
-			function (_) return true,
+		SyntaxHub.classLevel.before(
+			function (_) return false,
 			function (c:ClassBuilder) {
 				if (c.target.isInterface) return false;
         applyTo(c);
         //trace('>>> ${c.target.name}');
-        return appliesTo(c.target.meta);
+        return false;
 			}
 		);
   }
@@ -59,7 +59,6 @@ class MassiveMacro{
 	}
 
   private static function extractFields(x:Expr){
-    trace(Context.currentPos());
     var x_type = Context.typeof(x);
     switch(x_type){
       case TInst(class_t, params):
@@ -84,6 +83,15 @@ class MassiveMacro{
     var aID:String = extrIdentifier(a);
     var bID:String = extrIdentifier(b);
     var code = '{\n' + [for(p in props) '$aID.$p = $bID.$p;'].join('\n') + '}';
+#if massive_debug
+      trace("##########");
+      trace("##########");
+      trace("##########");
+    trace(code);
+      trace("##########");
+      trace("##########");
+      trace("##########");
+#end
     return Context.parse(code, Context.currentPos());
   }
 

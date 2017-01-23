@@ -30,6 +30,11 @@ class ExampleModel{
     @:mass oldModel = newModel;
     massive(oldModel, newModel);
 
+    function closure(){
+      @:mass oldModel = newModel;
+    }
+    closure();
+
     trace('oldModel propertyA: ${oldModel.propertyA}');
     trace('oldModel propertyB: ${oldModel.propertyB}');
     trace('oldModel propertyC: ${oldModel.propertyC}');

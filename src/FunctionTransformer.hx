@@ -9,6 +9,7 @@ import tink.await.Thunk;
 
 using tink.CoreApi;
 using tink.MacroApi;
+using haxe.macro.ExprTools;
 using Lambda;
 using tink.await.MacroTools.MacroExprTools;
 #end
@@ -77,12 +78,10 @@ class FunctionTransformer{
 		}
 	}
 	
-	function continueName(loop) return loop+'_continue';
-	function breakName(loop) return loop+'_break';
-	
 	function process(e:Expr, ctx:MassContext, next:Expr -> Thunk<Expr>): Thunk<Expr> {
 		if (e == null) return function() return next(null);
 
+    trace(e);
 		ctx = Reflect.copy(ctx);
 
 		switch e.expr {
@@ -104,6 +103,8 @@ class FunctionTransformer{
         if(!MassiveMacro.isMassive(m.name)) return function() return process(em, ctx, function(em_2){
           return next(EMeta(m, em_2).at(e.pos));
         });
+        trace("Found @:mass ~~~~~~~~`");
+        trace("~~~~~~~~~~~~~~~`");
         switch(em.expr){
           case EBinop(op, e1, e2):
             switch(op){
@@ -112,21 +113,26 @@ class FunctionTransformer{
                   switch(p.expr){
                     case EConst(CIdent(x)): macro '$x';
                     default: 
-                      haxe.macro.Context.error('@massive: Expected identifier, not ${p.expr}', em.pos);
+                      haxe.macro.Context.error('@mass: Expected identifier, not ${p.expr}', em.pos);
                   }
                 }];
-                var deSugar = @:pos(e.pos) macro MassiveMacro.massive($e1,$e2,$a{props});
+                var deSugar = @:pos(e.pos) macro MassiveMacro.massive($e1, $e2, $a{props});
+                trace(deSugar);
                 return function() return next(deSugar);
               default:
-                haxe.macro.Context.error('@massive used on non-assignment', em.pos);
+                haxe.macro.Context.error('@mass used on non-assignment', em.pos);
                 return function() return process(e1, ctx, function(t1)
                   return function() return process(e2, ctx, function(t2)
                     return function() return next(EBinop(op, t1, t2).at(e.pos))
                   )
                 );
             }
+          //case EFunction(name,func):
+          //  return function() return process(em, ctx, function(em2){
+          //    return function() return next(EMeta(m,em2).at(e.pos));
+          //});
           default:
-            haxe.macro.Context.error('@massive used on non-assignment', em.pos);
+            haxe.macro.Context.error('@mass used on non-assignment', em.pos);
             return function() return process(em, ctx, function(em_2){
                 return function() return next(em_2);
             });
@@ -227,6 +233,11 @@ class FunctionTransformer{
 				return function() return transformList(params, ctx, function(transformedParameters: Array<Expr>)
 					return function() return next(ENew(t, transformedParameters).at(e.pos))
 				);
+			case EFunction(name, func):
+        return function() return process(func.expr, ctx, function(func_expr2){
+          var func2 = {args:func.args, ret:func.ret, expr:func_expr2, params:func.params};
+          return function() return next(EFunction(name, func2).at(e.pos));
+        });
 			default:
 		}
 		return function() return next(e);
