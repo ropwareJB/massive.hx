@@ -20,10 +20,10 @@
   },
   "solutions": {
     "massive": {
-      "target": "java",
+      "target": "php",
       "out_dir": "bin",
       "out_bin": "massive",
-      "main": "Main",
+      "main": "massive.Main",
       "name": null,
       "sources": [],
       "flags": [],
