@@ -9,6 +9,10 @@ class ExampleModel{
   public var propertyC:Int;
   private var propertyD:Int;
 
+  public static var scenario(default,never) = [
+    "exampleScenario" => ["propertyB", "propertyC"]
+  ];
+
   public function new(a:Int,b:Int,c:Int,d:Int){
     this.propertyA = a;
     this.propertyB = b;
@@ -35,14 +39,14 @@ class ExampleModel{
     @:mass(propertyA, propertyB) oldModel = newModel;
     massAssign(oldModel, newModel, ["propertyA", "propertyB"]);
 
-    // Assign all properties
-    @:mass oldModel = newModel;
-    massAssign(oldModel, newModel);
-
-    function closure(){
+    @:scenario("exampleScenario") function closure(){
       @:mass oldModel = newModel;
     }
     closure();
+
+    // Assign all properties
+    @:mass oldModel = newModel;
+    massAssign(oldModel, newModel);
 
     oldModel.printMe("oldModel");
   }

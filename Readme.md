@@ -78,8 +78,7 @@ A big thankyou to [**back2dos**](https://github.com/back2dos) for the tink libra
 - Check at compiletime if object B has all props from object A.
 - Allow assignment to anonymous structures
 - Allow assignment from anonymous structures
-- Scenarios?
-- @:scenario metadata
+- Scenarios actually looking up
 - public readable check
 
 [1]: https://code.tutsplus.com/tutorials/mass-assignment-rails-and-you--net-31695
