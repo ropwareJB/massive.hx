@@ -9,16 +9,16 @@ class ExampleModel{
   public var propertyC:Int;
   private var propertyD:Int;
 
-  public static var scenario(default,never) = [
-    "exampleScenario" => ["propertyB", "propertyC"]
-  ];
-
   public function new(a:Int,b:Int,c:Int,d:Int){
     this.propertyA = a;
     this.propertyB = b;
     this.propertyC = c;
     this.propertyD = d;
   }
+
+  public inline function scenario() return [
+    "exampleScenario" => ["propertyB", "propertyC"]
+  ];
 
   public function printMe(p:String){
     trace('$p propertyA: ${propertyA}');
@@ -46,7 +46,7 @@ class ExampleModel{
 
     // Assign all properties
     @:mass oldModel = newModel;
-    massAssign(oldModel, newModel);
+    massAssign(oldModel, newModel, []);
 
     oldModel.printMe("oldModel");
   }

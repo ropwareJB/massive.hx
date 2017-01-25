@@ -32,8 +32,14 @@ class ExpressionTransformerInward extends ExpressionTransformer{
           haxe.macro.Context.error('@mass: Expected identifier, not ${p.expr}', em.pos);
       }
     }];
-    var scenario = context.scenario.length>0 ? context.scenario[0] : null;
-    return @:pos(e.pos) macro massive.MassiveMacro.massAssign($e1, $e2, $a{props}, $v{scenario});
+    var scenario = context.scenario.length > 0 ? context.scenario[0] : null;
+    if(scenario == null || props.length != 0){
+      return @:pos(e.pos) macro massive.MassiveMacro.massAssign($e1, $e2, $a{props});
+    }
+
+    return @:pos(e.pos) macro {
+      massive.MassiveMacro.massAssign($e1, $e2, $e1.scenario()[$v{scenario}]);
+    };
   }
 
 #end
