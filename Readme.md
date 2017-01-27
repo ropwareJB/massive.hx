@@ -14,7 +14,7 @@ A build and initialization macro with some syntax sugar to make your code puurrt
 
 ### Usage
 Given a model `ExampleModel`;  
-```
+```haxe
 class ExampleModel{
 
   public var propertyA:Int;
@@ -33,21 +33,21 @@ class ExampleModel{
 ```
 
 and two instances of the model;
-```
+```haxe
 var oldModel = new ExampleModel(1, 2, 3, 4);
 var newModel = new ExampleModel(3, 4, 10, 55);
 ```
 
 #### Selective Assignment
 We can selectively copy attributes from `newModel` to `oldModel`;
-```
+```haxe
 function example(){
   @:mass(propertyA, propertyB) oldModel = newModel;
 }
 ```
 
 Which will map out to the following at compile time;
-```
+```haxe
 function example(){
   oldModel.propertyA = newModel.propertyA;
   oldModel.propertyB = newModel.propertyB;
@@ -56,14 +56,14 @@ function example(){
 
 #### Absolute Assignment
 We can also copy **all public writable** attributes from `newModel` to `oldModel` that oldModel can hold;
-```
+```haxe
 @:mass function example(){
   @:mass oldModel = newModel;
 }
 ```
 
 Which will map out to the following at compile time;
-```
+```haxe
 function example(){
   oldModel.propertyA = newModel.propertyA;
   oldModel.propertyB = newModel.propertyB;
@@ -71,15 +71,50 @@ function example(){
 }
 ```
 
+#### Scenarios
+
+Scenarios are an addition to massive assignment, traditionally to work with ActiveRecord instances or instances of a model  from the database. They are an attempt to simultaneously 'raise' the abstraction level by defining the whitelisted attributes in the class model, so you can reuse the whitelists across multiple `@:mass` assignments, and to coerce the programmer to explicitly define what attributes are 'safe' in a certain context.  
+
+The scenario implementation assumes that your `ExampleModel` has a function `public inline function scenarios():Map<String,Array<String>>`. Inlining isn't mandatory but there's no reason not to.  
+
+```haxe
+class ExampleModel{
+  ...
+  public inline function scenarios() return [
+    "exampleScenario" => ["propertyB", "propertyC"]
+  ];
+  ...
+}
+```
+
+Then, when you want to assign to a `ExampleModel` instance in a constrained monomorph, ie an explicit `ExampleModel` instance, use a `@:scenario("scenario")` in a parent node of the AST, ie a function;  
+
+```haxe
+@:scenario("exampleScenario") function closure(){
+  @:mass oldModel = newModel;
+}
+```
+
+Which will then map to (roughly) the following code using Reflection;
+
+```haxe
+function closure(){
+  for(p in ["propertyB", "propertyC"]){
+    var val = Reflect.getProperty(newModel, p);
+    Reflect.setProperty, oldModel, p, val);
+  }
+}
+```
+
 ### Credits
 A big thankyou to [**back2dos**](https://github.com/back2dos) for the tink libraries - they are **extremely** useful and this language extension was based off of the tink_await library.
 
 ### TODO
-- Check at compiletime if object B has all props from object A.
+- Check at compiletime if object B has all props from object A?
+- Only update props from B that intersect with A, warn otherwise
 - Allow assignment to anonymous structures
 - Allow assignment from anonymous structures
-- Scenarios actually looking up
-- public readable check
+- public readable check for getting vals from B
 
 [1]: https://code.tutsplus.com/tutorials/mass-assignment-rails-and-you--net-31695
 [2]: http://www.yiiframework.com/doc-2.0/guide-structure-models.html#massive-assignment

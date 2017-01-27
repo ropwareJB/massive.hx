@@ -38,7 +38,7 @@ class ExpressionTransformerInward extends ExpressionTransformer{
     }
 
     return @:pos(e.pos) macro {
-      massive.MassiveMacro.massAssign($e1, $e2, $e1.scenario()[$v{scenario}]);
+      massive.MassiveMacro.massAssign($e1, $e2, $e1.scenarios()[$v{scenario}]);
     };
   }
 

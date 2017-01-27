@@ -16,7 +16,7 @@ class ExampleModel{
     this.propertyD = d;
   }
 
-  public inline function scenario() return [
+  public inline function scenarios() return [
     "exampleScenario" => ["propertyB", "propertyC"]
   ];
 
