@@ -33,18 +33,19 @@ class MassiveMacro{
     }
   }
 	
-  private static function extractFields(x:Expr){
+  private static function extractFields(x:Expr):Expr{
     var x_type = Context.typeof(x);
     switch(x_type){
       case TInst(class_t, params):
-        return [ for(f in class_t.get().fields.get()) if(shouldExtractField(f)) f.name ];
+        var x = [ for(f in class_t.get().fields.get()) if(shouldExtractField(f)) f.name ];
+        return macro $v{x};
       default: 
          var e = 'Massive Assignment Error: Object instance expected instead of $x_type';
          return Context.error(e, x.pos);
     }
   }
 
-  private static function extrIdentifier(a:Expr){
+  private static function extrIdentifier(a:Expr):String{
     switch(a.expr){
       case EConst(CIdent(x)): return '$x';
       default:
@@ -52,8 +53,15 @@ class MassiveMacro{
     }
   }
 
-  public static function massiveMacro(a:Expr, b:Expr, ?props:Expr){
-    //props = (props == null || props.length == 0) ? [] : props; //extractFields(a)
+  public static function massiveMacro(a:Expr, b:Expr, ?props:Expr):Expr{
+    props = switch(props.expr){
+      case EArrayDecl([]): extractFields(a);
+      case EArrayDecl(ys):
+          trace(ys);
+          props;
+      default: props;
+    }
+    props = (props == null) ? extractFields(a) : props;
     var aID:String = extrIdentifier(a);
     var bID:String = extrIdentifier(b);
     return @:pos(a.pos) macro { 
